@@ -18,7 +18,7 @@ model User {
   id           Int    @id @default(autoincrement())
   firstNmae    String @db.VarChar(35)
   lastNmae     String @db.VarChar(35)
-  email        String
+  email        String @unique
   passwordHash String
   role         Role   @default(USER)
 
@@ -29,7 +29,9 @@ model User {
   likedBlogs   Blog[] @relation("liked")
 
   writtenComments Comment[] @relation("written")
-  likedComments    Comment[] @relation("liked")
+  likedComments   Comment[] @relation("liked")
+
+  @@index([email])
 }
 
 model Profile {

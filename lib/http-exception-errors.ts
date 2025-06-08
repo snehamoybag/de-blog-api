@@ -7,7 +7,7 @@ export default class HttpException extends Error {
   }
 }
 
-export class Error404NotFound extends HttpException {
+export class ErrorNotFound extends HttpException {
   constructor(message: string) {
     super("ErrorNotFound: " + message, 404);
   }
