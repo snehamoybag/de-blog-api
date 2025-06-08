@@ -1,0 +1,36 @@
+{
+  "name": "de-blog-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "/dist/app.js",
+  "scripts": {
+    "dev": "tsx watch app.ts",
+    "build": "tsc",
+    "start": "tsc && node dist/app.js",
+    "lint": "eslint",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Snehamoy Bag",
+  "license": "ISC",
+  "description": "API of De-Blog.",
+  "devDependencies": {
+    "@eslint/js": "^9.28.0",
+    "@tsconfig/node20": "^20.1.5",
+    "@types/node": "^22.15.30",
+    "eslint": "^9.28.0",
+    "eslint-config-prettier": "^10.1.5",
+    "prettier": "^3.5.3",
+    "prisma": "^6.9.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.1"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1"
+  }
+}
