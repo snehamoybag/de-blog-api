@@ -13,3 +13,81 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id           Int    @id @default(autoincrement())
+  firstNmae    String @db.VarChar(35)
+  lastNmae     String @db.VarChar(35)
+  email        String
+  passwordHash String
+  role         Role   @default(USER)
+
+  // although its optional make sure to create a profile when creating a new user
+  profile Profile?
+
+  writtenBlogs Blog[] @relation("written")
+  likedBlogs   Blog[] @relation("liked")
+
+  writtenComments Comment[] @relation("written")
+  likedComments    Comment[] @relation("liked")
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  joinedAt  DateTime @default(now())
+  avatarUrl String?
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int  @unique
+}
+
+model Blog {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(120)
+  content     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt()
+  isPublished Boolean  @default(false)
+
+  author   User @relation("written", fields: [authorId], references: [id])
+  authorId Int
+
+  topics Topic[]
+
+  likes User[] @relation("liked")
+
+  comments Comment[]
+}
+
+model Topic {
+  id          Int     @id @default(autoincrement())
+  name        String  @db.VarChar(120)
+  description String? @db.VarChar(255)
+
+  blogs Blog[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt()
+
+  author   User @relation("written", fields: [authorId], references: [id])
+  authorId Int
+
+  blog   Blog @relation(fields: [blogId], references: [id])
+  blogId Int
+
+  parentComment Comment?  @relation("hierarchy", fields: [commentId], references: [id])
+  commentId     Int?
+  replies       Comment[] @relation("hierarchy")
+
+  likes User[] @relation("liked")
+}
+
+enum Role {
+  ADMIN
+  MODERATOR
+  USER
+}
