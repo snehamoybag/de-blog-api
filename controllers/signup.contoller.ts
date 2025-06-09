@@ -23,7 +23,7 @@ export const handleSignup: RequestHandler[] = [
     if (!validationErrors.isEmpty()) {
       const statusCode = 400;
       res.status(statusCode).json(
-        new FailureResponse("Validation failed.", statusCode, {
+        new FailureResponse("ErrorBadRequest:Validation failed.", statusCode, {
           errors: validationErrors.mapped(),
         })
       );

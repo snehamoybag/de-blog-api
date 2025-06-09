@@ -81,9 +81,9 @@ model Comment {
   blog   Blog @relation(fields: [blogId], references: [id])
   blogId Int
 
-  parentComment Comment?  @relation("hierarchy", fields: [commentId], references: [id])
-  commentId     Int?
-  replies       Comment[] @relation("hierarchy")
+  parentComment   Comment?  @relation("hierarchy", fields: [parentCommentId], references: [id])
+  parentCommentId Int?
+  replies         Comment[] @relation("hierarchy")
 
   likes User[] @relation("liked")
 }
