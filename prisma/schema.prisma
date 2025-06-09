@@ -16,8 +16,8 @@ datasource db {
 
 model User {
   id           Int    @id @default(autoincrement())
-  firstNmae    String @db.VarChar(35)
-  lastNmae     String @db.VarChar(35)
+  firstName    String @db.VarChar(35)
+  lastName     String @db.VarChar(35)
   email        String @unique
   passwordHash String
   role         Role   @default(USER)

@@ -12,6 +12,8 @@ app.use(express.json());
 
 // ROUTES
 app.use("/", routes.home);
+app.use("/signup", routes.signup);
+app.use("/login", routes.login);
 app.use("/blogs", routes.blogs);
 
 // ERROR HANDLER
