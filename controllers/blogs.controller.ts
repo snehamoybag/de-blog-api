@@ -18,7 +18,7 @@ export const create: RequestHandler[] = [
       res.status(400).json(
         new FailureResponse("ErrorBadRequest: Validation failed.", 400, {
           errors: validationErrors.mapped(),
-        })
+        }),
       );
 
       return;
@@ -64,7 +64,7 @@ export const update: RequestHandler[] = [
       res.status(statusCode).json(
         new FailureResponse("Validation failed.", statusCode, {
           errors: validationErrors.mapped(),
-        })
+        }),
       );
 
       return;
@@ -86,11 +86,11 @@ export const update: RequestHandler[] = [
       blogId,
       title,
       content,
-      isPublished
+      isPublished,
     );
 
     res.json(
-      new SuccessResponse("Blog updated successfully.", { blog: updatedBlog })
+      new SuccessResponse("Blog updated successfully.", { blog: updatedBlog }),
     );
   },
 ];
@@ -107,6 +107,6 @@ export const deleteOne: RequestHandler = async (req, res) => {
   const deletedBlog = blogModel.deleteOne(blogId);
 
   res.json(
-    new SuccessResponse("Blog deleted successfully.", { blog: deletedBlog })
+    new SuccessResponse("Blog deleted successfully.", { blog: deletedBlog }),
   );
 };

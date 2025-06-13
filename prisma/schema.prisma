@@ -63,7 +63,7 @@ model Blog {
 
 model Topic {
   id          Int     @id @default(autoincrement())
-  name        String  @db.VarChar(120)
+  name        String  @unique @db.VarChar(120)
   description String? @db.VarChar(255)
 
   blogs Blog[]

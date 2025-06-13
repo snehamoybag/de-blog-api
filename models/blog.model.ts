@@ -1,4 +1,5 @@
 import prisma from "../configs/prisma.config";
+import Blog from "../types/blog.type";
 
 export const create = (
   authorId: number,
@@ -55,7 +56,7 @@ export const getOne = async (userId: number, blogId: number) => {
 
   const { likes, comments, _count, ...rest } = blog;
 
-  return {
+  const formatedBlog: Blog = {
     ...rest,
     count: _count,
     userInteractions: {
@@ -63,6 +64,8 @@ export const getOne = async (userId: number, blogId: number) => {
       comment: comments.length > 0,
     },
   };
+
+  return formatedBlog;
 };
 
 export const getMany = async (
@@ -109,7 +112,7 @@ export const getMany = async (
   const formatedBlogs = blogs.map((blog) => {
     const { likes, comments, _count, ...rest } = blog;
 
-    return {
+    const formatedBlog: Blog = {
       ...rest,
       count: _count,
       userInteractions: {
@@ -117,6 +120,8 @@ export const getMany = async (
         comment: comments.length > 0,
       },
     };
+
+    return formatedBlog;
   });
 
   return formatedBlogs;
