@@ -6,10 +6,15 @@ import assertLimitOffsetDirection from "../lib/assert-limit-offset-direction";
 import * as blogValidations from "../validations/blog.validations";
 import { validationResult } from "express-validator";
 import { ErrorNotFound } from "../lib/http-exception-errors";
+import * as topicValidations from "../validations/topic.validations";
+import assertTopicNames from "../lib/assert-topic-names";
+import getAddedAndRemovedTopicNames from "../lib/get-added-removed-topic-names";
+import Blog from "../types/blog.type";
 
 export const create: RequestHandler[] = [
   blogValidations.title(),
   blogValidations.content(),
+  topicValidations.topics(),
 
   async (req, res) => {
     const validationErrors = validationResult(req);
@@ -27,7 +32,15 @@ export const create: RequestHandler[] = [
     const { title, content } = req.body;
     const isPublished = req.query.publish === "true";
 
-    const blog = await blogModel.create(user.id, title, content, isPublished);
+    const topicNames = await assertTopicNames(req);
+
+    const blog = await blogModel.create(
+      user.id,
+      title,
+      content,
+      isPublished,
+      topicNames,
+    );
     res.json(new SuccessResponse("Blog created successfully.", { blog }));
   },
 ];
@@ -55,6 +68,7 @@ export const getMany: RequestHandler = async (req, res) => {
 export const update: RequestHandler[] = [
   blogValidations.title(),
   blogValidations.content(),
+  topicValidations.topics(),
 
   async (req, res) => {
     const validationErrors = validationResult(req);
@@ -73,7 +87,8 @@ export const update: RequestHandler[] = [
     const user = assertUser(req);
     const blogId = Number(req.params.id);
 
-    const blog = res.locals.blog || (await blogModel.getOne(user.id, blogId));
+    const blog: Blog | null =
+      res.locals.blog || (await blogModel.getOne(user.id, blogId));
 
     if (!blog) {
       throw new ErrorNotFound(`Blog with the id ${blogId} is not found.`);
@@ -82,11 +97,19 @@ export const update: RequestHandler[] = [
     const { title, content } = req.body;
     const isPublished = Boolean(req.body.isPublished);
 
+    const topicNames = await assertTopicNames(req);
+    const [addedTopicNames, removedTopicNames] = getAddedAndRemovedTopicNames(
+      topicNames,
+      blog,
+    );
+
     const updatedBlog = await blogModel.update(
       blogId,
       title,
       content,
       isPublished,
+      removedTopicNames,
+      addedTopicNames,
     );
 
     res.json(

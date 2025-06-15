@@ -1,6 +1,7 @@
-import { Blog as PrismaBlog } from "../generated/prisma";
+import { Blog as PrismaBlog, Topic } from "../generated/prisma";
 
 type Blog = PrismaBlog & {
+  topics: Topic[];
   count: { likes: number; comments: number };
   userInteractions: {
     like: boolean;

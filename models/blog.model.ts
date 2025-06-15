@@ -5,7 +5,8 @@ export const create = (
   authorId: number,
   title: string,
   content: string,
-  isPublished: boolean = false
+  isPublished: boolean = false,
+  topics: string[]
 ) => {
   return prisma.blog.create({
     data: {
@@ -13,6 +14,11 @@ export const create = (
       title,
       content,
       isPublished,
+      topics: {
+        connect: topics.map((topic) => {
+          return { name: topic };
+        }),
+      },
     },
   });
 };
@@ -22,6 +28,7 @@ export const getOne = async (userId: number, blogId: number) => {
     where: { id: blogId },
 
     include: {
+      topics: true,
       _count: {
         select: {
           comments: true,
@@ -81,6 +88,7 @@ export const getMany = async (
     skip: offset,
 
     include: {
+      topics: true,
       _count: {
         select: {
           comments: true,
@@ -131,7 +139,9 @@ export const update = (
   id: number,
   title: string,
   content: string,
-  isPublished: boolean
+  isPublished: boolean,
+  removedTopics: string[],
+  addedTopics: string[]
 ) => {
   return prisma.blog.update({
     where: {
@@ -141,6 +151,15 @@ export const update = (
       title,
       content,
       isPublished,
+      topics: {
+        disconnect: removedTopics.map((topic) => {
+          return { name: topic };
+        }),
+
+        connect: addedTopics.map((topic) => {
+          return { name: topic };
+        }),
+      },
     },
   });
 };
